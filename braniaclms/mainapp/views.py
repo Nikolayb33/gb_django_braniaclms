@@ -3,6 +3,7 @@ from django.http import HttpResponse
 # from django.views.generic import View
 from django.views.generic import TemplateView
 from datetime import datetime
+from mainapp.models import News
 
 class ContactsView(TemplateView):
     template_name = 'mainapp/contacts.html'
@@ -61,38 +62,39 @@ class NewsView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        context_data['object_list'] = [
-            {
-                'title': 'Новость раз',
-                'preview': 'Превью раз',
-                'date': datetime.now().strftime('%d.%m.%Y')
-            },
-            {
-                'title': 'Новость два',
-                'preview': 'Превью два',
-                'date': datetime.now().strftime('%d.%m.%Y')
-            },
-            {
-                'title': 'Новость три',
-                'preview': 'Превью три',
-                'date': datetime.now().strftime('%d.%m.%Y')
-            },
-            {
-                'title': 'Новость четыре',
-                'preview': 'Превью четыре',
-                'date': datetime.now().strftime('%d.%m.%Y')
-            },
-            {
-                'title': 'Новость пять',
-                'preview': 'Превью пять',
-                'date': datetime.now().strftime('%d.%m.%Y')
-            },
-            {
-                'title': 'Новость шесть',
-                'preview': 'Превью шесть',
-                'date': datetime.now().strftime('%d.%m.%Y')
-            },
-        ]
+        context_data['object_list'] = News.objects.all()
+        # context_data['object_list'] = [
+        #     {
+        #         'title': 'Новость раз',
+        #         'preview': 'Превью раз',
+        #         'date': datetime.now().strftime('%d.%m.%Y')
+        #     },
+        #     {
+        #         'title': 'Новость два',
+        #         'preview': 'Превью два',
+        #         'date': datetime.now().strftime('%d.%m.%Y')
+        #     },
+        #     {
+        #         'title': 'Новость три',
+        #         'preview': 'Превью три',
+        #         'date': datetime.now().strftime('%d.%m.%Y')
+        #     },
+        #     {
+        #         'title': 'Новость четыре',
+        #         'preview': 'Превью четыре',
+        #         'date': datetime.now().strftime('%d.%m.%Y')
+        #     },
+        #     {
+        #         'title': 'Новость пять',
+        #         'preview': 'Превью пять',
+        #         'date': datetime.now().strftime('%d.%m.%Y')
+        #     },
+        #     {
+        #         'title': 'Новость шесть',
+        #         'preview': 'Превью шесть',
+        #         'date': datetime.now().strftime('%d.%m.%Y')
+        #     },
+        # ]
         # context_data['title'] = 'Новость раз'
         # context_data['preview'] = 'Превью к новости раз'
         # context_data['date'] = '09.05.2022'

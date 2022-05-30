@@ -1,11 +1,9 @@
 <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
-        <li class="nav-item {% if request.resolver_match.view_name == 
-            'mainapp:mainapp.views.NewsView' %}active{% endif %}">
+        <li class="nav-item">
             <a class="nav-link" href="{% url 'mainapp:news' %}">Новости</a>
         </li>
-        <li class="nav-item {% if request.resolver_match.view_name ==
-            'mainapp:mainapp.views.CoursesListView' %}active{% endif %}">
+        <li class="nav-item">
             <a class="nav-link" href="{% url 'mainapp:courses' %}">Курсы</a>
         </li>
         <li class="nav-item dropdown">
@@ -24,8 +22,7 @@
             </div>
         </li>
         <li class="nav-item ">
-            <a class="nav-link {% if request.resolver_match.view_name == 
-                'mainapp:mainapp.views.ContactsListView' %}active{% endif %}" href="{% url 'mainapp:contacts' %}">Контакты</a>
+            <a class="nav-link" href="{% url 'mainapp:contacts' %}">Контакты</a>
         </li>
     </ul>
     <span><a href="#">🇷🇺</a> <i class="fas fa-grip-lines-vertical"></i> <a href="#">🇬🇧</a></span>

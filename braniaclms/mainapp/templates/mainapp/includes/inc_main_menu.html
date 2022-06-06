@@ -21,9 +21,21 @@
                 <a class="dropdown-item" href="#">Выход</a>
             </div>
         </li>
+        {% if user.is_authenticated %}
         <li class="nav-item ">
             <a class="nav-link" href="{% url 'mainapp:contacts' %}">Контакты</a>
         </li>
+        <li class="nav-item ">
+            <a class="nav-link" href="{% url 'authapp:edit' %}">{{ user.first_name|default:user.username }}</a>
+        </li>
+        <li class="nav-item ">
+            <a class="nav-link" href="{% url 'authapp:logout' %}">Выход</a>
+        </li>
+        {% else %}
+        <li class="nav-item ">
+            <a class="nav-link" href="{% url 'authapp:login' %}">Вход</a>
+        </li>
+        {% endif %}
     </ul>
     <span><a href="#">🇷🇺</a> <i class="fas fa-grip-lines-vertical"></i> <a href="#">🇬🇧</a></span>
 </div>

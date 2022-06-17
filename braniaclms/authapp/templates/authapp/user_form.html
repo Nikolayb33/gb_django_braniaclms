@@ -1,8 +1,36 @@
 {% extends 'authapp/base.html' %}
+{% load crispy_forms_tags %}
 {% block content %}
 <form method="post" enctype="multipart/form-data">
   {% csrf_token %}
-    <p>
+  {{ form|crispy }}  
+  <p>
+    <button type="submit" class="btn btn-primary btn-block">Сохранить</button>
+  </p>
+</form>
+<p>
+<div class="row justify-content-between">
+  <div class="col"> <a href="{% url 'authapp:login' %}"><small>Войти</small></a>
+  </div>
+  <div class="col">
+    <a href="#"><small>Забыли пароль?</small></a>
+  </div>
+</div>
+</p>
+{% endblock %}
+
+{% block js%}
+<script>
+  $(document).ready(function () {
+    {% if messages %}
+    // Toasts
+    $(".toast").toast({ delay: 5000 });
+    $(".toast").toast("show");
+    {% endif %}
+  });
+</script>
+{% endblock %}
+<!-- <p>
     <input type="text" name="username"
            autofocus="" autocapitalize="none" autocomplete="username"
            maxlength="150" class="textinput textInput form-control"
@@ -42,30 +70,4 @@
   <p>
     <input type="file" name="avatar"
            class="textinput textInput form-control" required="" placeholder="Avatar">
-  </p>
-  <p>
-    <button type="submit" class="btn btn-primary btn-block">Сохранить</button>
-  </p>
-</form>
-<p>
-<div class="row justify-content-between">
-  <div class="col"> <a href="{% url 'authapp:login' %}"><small>Войти</small></a>
-  </div>
-  <div class="col">
-    <a href="#"><small>Забыли пароль?</small></a>
-  </div>
-</div>
-</p>
-{% endblock %}
-
-{% block js%}
-<script>
-  $(document).ready(function () {
-    {% if messages %}
-    // Toasts
-    $(".toast").toast({ delay: 5000 });
-    $(".toast").toast("show");
-    {% endif %}
-  });
-</script>
-{% endblock %}
+  </p> -->

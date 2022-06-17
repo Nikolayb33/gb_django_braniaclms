@@ -1,5 +1,7 @@
 from curses.ascii import NUL
 from django.db import models
+from django.contrib.auth import get_user_model
+from django.conf import settings
 
 NULLABLE =  {'blank':True, 'null':True}
 
@@ -33,7 +35,7 @@ class News(BaseModel):
     body_as_markdown = models.BooleanField(default=False, verbose_name='Способ разметки')
 
     def __str__(self):
-        return f'#{self.pk} {self.tittle}'
+        return f'#{self.pk} {self.title}'
     
     class Meta:
         verbose_name = 'новость'
@@ -86,3 +88,27 @@ class CoursesTeachers(BaseModel):
         return '{0:0>3} {1} {2}'.format(
             self.pk, self.name_second, self.name_first
         )
+
+
+class CourseFeedback(BaseModel):
+    
+    RATINGS = (
+        (5, '⭐⭐⭐⭐⭐'),
+        (4, '⭐⭐⭐⭐'),
+        (3, '⭐⭐⭐'),
+        (2, '⭐⭐'),
+        (1, '⭐'),
+    )
+    
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='Курс')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='Пользователь')
+    rating = models.SmallIntegerField(choices=RATINGS, default=5, verbose_name='Рейтинг')
+    feedback = models.TextField(verbose_name='Отзыв', default='Без отзыва')
+    
+    class Meta:
+        verbose_name = ''
+        verbose_name_plural = ''
+    
+    def __str__(self):
+        return f'Отзыв на {self.course} от {self.user}'
+    

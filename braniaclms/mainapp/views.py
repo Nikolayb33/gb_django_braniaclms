@@ -1,9 +1,18 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
+from django.template.loader import render_to_string
+from django.shortcuts import get_object_or_404
 # from django.shortcuts import render
 # from django.views.generic import View
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, ListView, UpdateView, DeleteView, DetailView, CreateView
 from datetime import datetime
+from mainapp.forms import CourseFeedbackForm
+from mainapp.models import CourseFeedback
+from mainapp.models import CoursesTeachers
+from mainapp.models import Lesson
 from mainapp.models import News
+from django.urls import reverse_lazy
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from mainapp.models import Course
 
 class ContactsView(TemplateView):
     template_name = 'mainapp/contacts.html'
@@ -36,8 +45,9 @@ class ContactsView(TemplateView):
         return context_data
 
 
-class CoursesListView(TemplateView):
+class CoursesListView(ListView):
     template_name = 'mainapp/courses_list.html'
+    model = Course
 
 
 class DocSiteView(TemplateView):
@@ -57,12 +67,63 @@ class LoginView(TemplateView):
     template_name = 'mainapp/login.html'
 
 
-class NewsView(TemplateView):
-    template_name = 'mainapp/news.html'
+class NewsListView(ListView):
+    model = News
+    paginate_by: 5
+    
+    def get_queryset(self):
+        return super().get_queryset().filter(deleted=False)
+    
+class NewsDetailView(DetailView):
+    model = News
+    
+class NewsCreateView(PermissionRequiredMixin, CreateView):
+    model = News
+    fields = '__all__'
+    success_url = reverse_lazy('mainapp:news')
+    permission_required = ('mainapp.add_news',)
+    
 
+class NewsUpdateView(PermissionRequiredMixin, UpdateView):
+    model = News
+    fields = '__all__'
+    success_url = reverse_lazy('mainapp:news')
+    permission_required = ('mainapp.change_news',)
+    
+class NewsDeleteView(PermissionRequiredMixin, DeleteView):
+    model = News
+    success_url = reverse_lazy('mainapp:news')
+    permission_required = ('mainapp:delete_news')
+    
+class CourseDetailView(TemplateView):
+    template_name = 'mainapp/course_detail.html'
+    
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        context_data['object_list'] = News.objects.all()
+        context_data['course_object'] = get_object_or_404(Course, pk=self.kwargs.get('pk'))
+        context_data['lessons'] = Lesson.objects.filter(course=context_data['course_object'])
+        context_data['teachers'] = CoursesTeachers.objects.filter(courses=context_data['course_object'])
+        context_data['feedback_list'] = CourseFeedback.objects.filter(course=context_data['course_object'])
+        
+        if self.request.user.is_authenticated:
+            context_data['feedback_form'] = CourseFeedbackForm(
+                course=context_data['course_object'], 
+                user=self.request.user)
+        
+        return context_data
+
+class CourseCreateFeedbackView(CreateView):
+    model = CourseFeedback
+    form_class = CourseFeedbackForm
+    
+    def form_valid(self, form):
+        self.object = form.save()
+        rendered_card = render_to_string( "mainapp/includes/feedback_card.html", context={"item": self.object})
+        return JsonResponse({"card": rendered_card})
+    
+    # def get_context_data(self, **kwargs):
+    #     context_data = super().get_context_data(**kwargs)
+    #     context_data['object_list'] = News.objects.all()
         # context_data['object_list'] = [
         #     {
         #         'title': 'Новость раз',
@@ -98,7 +159,7 @@ class NewsView(TemplateView):
         # context_data['title'] = 'Новость раз'
         # context_data['preview'] = 'Превью к новости раз'
         # context_data['date'] = '09.05.2022'
-        return context_data
+        # return context_data
 # Create your views here.
 # def hello_world(request):
 #     return HttpResponse("Hello_world!")

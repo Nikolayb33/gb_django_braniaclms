@@ -5,6 +5,7 @@ charset-normalizer==2.0.12
 cryptography==37.0.2
 defusedxml==0.7.1
 Django==4.0.4
+django-crispy-forms==1.14.0
 idna==3.3
 memory-profiler==0.60.0
 numpy==1.22.1

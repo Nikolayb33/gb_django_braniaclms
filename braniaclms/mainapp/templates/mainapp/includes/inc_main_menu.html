@@ -6,6 +6,9 @@
         <li class="nav-item">
             <a class="nav-link" href="{% url 'mainapp:courses' %}">Курсы</a>
         </li>
+        <li class="nav-item {% if request.resolver_match.view_name == 'mainapp:contacts' %} active {% endif %}">
+            <a class="nav-link" href="{% url 'mainapp:contacts' %}">Контакты</a> 
+        </li>
         <li class="nav-item dropdown">
             {% if user.is_authenticated %}
                 <a class="nav-link dropdown-toggle" href="#" id="ddProfile" role="button" data-toggle="dropdown"
@@ -21,6 +24,7 @@
                     {% endif %}
                     {% if user.is_superuser%}
                         <a class="dropdown-item" href="{% url 'admin:index' %}">Административный раздел</a>
+                        <a class="dropdown-item" href="{% url 'mainapp:log_view' %}" target="_blank">Лог</a>
                     {% endif %}
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="{% url 'authapp:logout' %}">Выход</a>
